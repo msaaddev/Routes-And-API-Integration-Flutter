@@ -1,10 +1,37 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:assignment6/AppDrawer.dart';
+import 'package:http/http.dart' as http;
 
 class AddRecord extends StatefulWidget {
   @override
   NewRecordList createState() => NewRecordList();
+}
+
+Future createRecord(
+    String first, String last, String gndr, String eml, String phoneNum) async {
+  final apiURL = Uri.parse('https://pcc.edu.pk/ws/create/hms_consumers.php');
+
+  final res = await http.post(apiURL,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        "firstName": first,
+        "lastName": last,
+        "gender": gndr,
+        "email": eml,
+        "phone": phoneNum
+      }));
+
+  if (res.statusCode == 201) {
+    print('success');
+  } else {
+    print('fail');
+    print(res);
+    return null;
+  }
 }
 
 class NewRecordList extends State<AddRecord> {
@@ -66,7 +93,6 @@ class NewRecordList extends State<AddRecord> {
                                     border: OutlineInputBorder(),
                                     labelText: 'Enter your first name...',
                                   ),
-                                  keyboardType: TextInputType.number,
                                 ),
                               )
                             ])),
@@ -94,7 +120,6 @@ class NewRecordList extends State<AddRecord> {
                                     border: OutlineInputBorder(),
                                     labelText: 'Enter your last name...',
                                   ),
-                                  keyboardType: TextInputType.number,
                                 ),
                               )
                             ])),
@@ -125,7 +150,6 @@ class NewRecordList extends State<AddRecord> {
                                     border: OutlineInputBorder(),
                                     labelText: 'Enter your gender...',
                                   ),
-                                  keyboardType: TextInputType.number,
                                 ),
                               )
                             ])),
@@ -153,7 +177,6 @@ class NewRecordList extends State<AddRecord> {
                                     border: OutlineInputBorder(),
                                     labelText: 'Enter your email...',
                                   ),
-                                  keyboardType: TextInputType.number,
                                 ),
                               )
                             ])),
@@ -181,7 +204,6 @@ class NewRecordList extends State<AddRecord> {
                                     border: OutlineInputBorder(),
                                     labelText: 'Enter your phone number...',
                                   ),
-                                  keyboardType: TextInputType.number,
                                 ),
                               )
                             ])),
@@ -194,6 +216,17 @@ class NewRecordList extends State<AddRecord> {
                                 elevation: 5,
                               ),
                               onPressed: () async {
+                                final String first = firstName.text;
+                                final String last = lastName.text;
+                                final String gndr = gender.text;
+                                final String eml = email.text;
+                                final String number = phoneNum.text;
+
+                                final record = await createRecord(
+                                    first, last, gndr, eml, number);
+
+                                print(record);
+
                                 return showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
