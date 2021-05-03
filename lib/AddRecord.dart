@@ -24,14 +24,6 @@ Future createRecord(
         "email": eml,
         "phone": phoneNum
       }));
-
-  if (res.statusCode == 201) {
-    print('success');
-  } else {
-    print('fail');
-    print(res);
-    return null;
-  }
 }
 
 class NewRecordList extends State<AddRecord> {
