@@ -17,7 +17,7 @@ class NewListRecord extends State<ListRecord> {
     var response = await http.get(apiURL);
     if (response.statusCode == 200) {
       data = jsonDecode(response.body);
-      return data;
+      print(data);
     } else {
       print('fail');
       print(response);
