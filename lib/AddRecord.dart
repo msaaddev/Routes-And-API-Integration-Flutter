@@ -13,7 +13,7 @@ Future createRecord(
     String first, String last, String gndr, String eml, String phoneNum) async {
   final apiURL = Uri.parse('https://pcc.edu.pk/ws/create/hms_consumers.php');
 
-  final res = await http.post(apiURL,
+  await http.post(apiURL,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -218,6 +218,11 @@ class NewRecordList extends State<AddRecord> {
                                     first, last, gndr, eml, number);
 
                                 print(record);
+                                firstName.clear();
+                                lastName.clear();
+                                gender.clear();
+                                email.clear();
+                                phoneNum.clear();
 
                                 return showDialog(
                                     context: context,
