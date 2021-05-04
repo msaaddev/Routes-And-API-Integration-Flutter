@@ -16,8 +16,10 @@ class NewListRecord extends State<ListRecord> {
     final apiURL = Uri.parse('https://pcc.edu.pk/ws/list/hms_consumers.php');
     var response = await http.get(apiURL);
     if (response.statusCode == 200) {
-      data = jsonDecode(response.body);
-      print(data);
+      setState(() {
+        data = jsonDecode(response.body);
+        data.removeAt(0);
+      });
     } else {
       print('fail');
       print(response);
@@ -93,141 +95,60 @@ class NewListRecord extends State<ListRecord> {
                     ),
                   ],
                 ),
-                Column(
-                  children: data.length != 0
-                      ? data.map((e) {
-                          if (e['id'] != 1) {
-                            Center(
-                              child: Card(
-                                margin: EdgeInsets.only(top: 30, bottom: 30),
-                                child: Container(
-                                  width: 350,
-                                  padding: EdgeInsets.only(top: 40, bottom: 20),
-                                  child: Column(
-                                    children: [
-                                      // first name
-                                      Container(
-                                          padding: EdgeInsets.only(
-                                              top: 40, bottom: 10, left: 30),
-                                          child: Row(children: [
-                                            Container(
-                                              padding:
-                                                  EdgeInsets.only(right: 30),
-                                              child: Text(
-                                                'First Name',
-                                                style: TextStyle(
-                                                  fontFamily: 'Raleway',
-                                                  fontSize: 14,
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 200,
-                                              child: Text(e['firstName']),
-                                            ),
-                                          ])),
-                                      // last name
-                                      Container(
-                                          padding: EdgeInsets.only(
-                                              top: 40, bottom: 10, left: 30),
-                                          child: Row(children: [
-                                            Container(
-                                              padding:
-                                                  EdgeInsets.only(right: 30),
-                                              child: Text(
-                                                'Last Name',
-                                                style: TextStyle(
-                                                  fontFamily: 'Raleway',
-                                                  fontSize: 14,
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 200,
-                                              child: Text(e['lastName']),
-                                            ),
-                                          ])),
-                                      // gender
-                                      Container(
-                                          padding: EdgeInsets.only(
-                                              top: 40, bottom: 10, left: 30),
-                                          child: Row(children: [
-                                            Container(
-                                              padding:
-                                                  EdgeInsets.only(right: 30),
-                                              child: Text(
-                                                'Gender',
-                                                style: TextStyle(
-                                                  fontFamily: 'Raleway',
-                                                  fontSize: 14,
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 200,
-                                              child: Text(e['gender']),
-                                            ),
-                                          ])),
-                                      // email
-                                      Container(
-                                          padding: EdgeInsets.only(
-                                              top: 40, bottom: 10, left: 30),
-                                          child: Row(children: [
-                                            Container(
-                                              padding:
-                                                  EdgeInsets.only(right: 30),
-                                              child: Text(
-                                                'Email',
-                                                style: TextStyle(
-                                                  fontFamily: 'Raleway',
-                                                  fontSize: 14,
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 200,
-                                              child: Text(e['email']),
-                                            ),
-                                          ])),
-                                      // phone number
-                                      Container(
-                                          padding: EdgeInsets.only(
-                                              top: 40, bottom: 10, left: 30),
-                                          child: Row(children: [
-                                            Container(
-                                              padding:
-                                                  EdgeInsets.only(right: 30),
-                                              child: Text(
-                                                'Number',
-                                                style: TextStyle(
-                                                  fontFamily: 'Raleway',
-                                                  fontSize: 14,
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 200,
-                                              child: Text(e['phone']),
-                                            ),
-                                          ])),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                        }).toList()
-                      : [
-                          Container(
-                            child: Text('Hello'),
-                          )
+                SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                        columns: [
+                          DataColumn(
+                              label: Text('First Name',
+                                  style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontSize: 16,
+                                    color: Colors.grey[600],
+                                  ))),
+                          DataColumn(
+                              label: Text('Last Name',
+                                  style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontSize: 16,
+                                    color: Colors.grey[600],
+                                  ))),
+                          DataColumn(
+                              label: Text('Gender',
+                                  style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontSize: 16,
+                                    color: Colors.grey[600],
+                                  ))),
+                          DataColumn(
+                              label: Text('Email',
+                                  style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontSize: 16,
+                                    color: Colors.grey[600],
+                                  ))),
+                          DataColumn(
+                              label: Text('Phone Number',
+                                  style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontSize: 16,
+                                    color: Colors.grey[600],
+                                  ))),
                         ],
-                )
+                        rows: data.map((e) {
+                          if (e['id'] != 1) {
+                            print(e['id']);
+                            return DataRow(cells: [
+                              DataCell(Text(e['firstName'])),
+                              DataCell(Text(e['lastName'])),
+                              DataCell(Text(e['gender'])),
+                              DataCell(Text(e['email'])),
+                              DataCell(Text(e['phone'])),
+                            ]);
+                          } else {
+                            print('hello');
+                          }
+                        }).toList())),
               ],
             ),
           ),
